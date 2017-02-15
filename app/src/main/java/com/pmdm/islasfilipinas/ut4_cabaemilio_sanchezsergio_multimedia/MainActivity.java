@@ -18,17 +18,23 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         // Obtenemos la referencia al widget VideoView
         videoView = (VideoView) findViewById(R.id.videoView);
+
         // Creamos el objeto MediaController
         mediaController = new MediaController(this);
+
         // Establecemos el ancho del MediaController
         mediaController.setAnchorView(videoView);
+
         // Al contenedor VideoView le añadimos los controles
         videoView.setMediaController(mediaController);
         // Cargamos el contenido multimedia (el vídeo) en el VideoView
 
         videoView.setVideoURI(Uri.parse("http://desprogresiva.antena3.com/mp_seriesh4/2013/02/22/00029/001.mp4"));
+
+        videoView.setVideoURI(Uri.parse("http://www.ebookfrenzy.com/android_book/movie.mp4"));
 
 
         // Registramos el callback que será invocado cuando el vídeo esté cargado y
@@ -36,7 +42,6 @@ public class MainActivity extends Activity {
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                mediaController.show(10000);
                 videoView.start();
             }
         });
