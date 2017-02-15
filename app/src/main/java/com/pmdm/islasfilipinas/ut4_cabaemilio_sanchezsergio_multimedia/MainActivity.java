@@ -85,6 +85,7 @@ public class MainActivity extends Activity {
             mediaPlayer.stop();
             try {
                 mediaPlayer.prepare();
+                mediaPlayer.seekTo(0);
                 t.setText("STOP");
             } catch (IOException e) {
                 e.printStackTrace();
