@@ -54,23 +54,6 @@ public class MainActivity extends Activity {
             }
         });
 
-        // Registramos el callback que será invocado cuando el vídeo esté cargado y
-        // preparado para la reproducción
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                Toast.makeText(MainActivity.this, "El video ya se ha cargado", Toast.LENGTH_SHORT).show();
-                videoView.pause();
-            }
-        });
-
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mediaPlayer.release();
-                t.setText("FINALIZADO");
-            }
-        });
 
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -105,8 +88,15 @@ public class MainActivity extends Activity {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp){
-                mediaPlayer.release();
-                t.setText("FINALIZADO");
+                try {
+                    mediaPlayer.stop();
+                    mediaPlayer.prepare();
+                    mediaPlayer.seekTo(0);
+                    t.setText("FINALIZADO");
+                    seekBar.setProgress(0);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -116,6 +106,7 @@ public class MainActivity extends Activity {
             Toast.makeText(MainActivity.this, "Ya estás escuchando música, ¿qué más quieres chaval?", Toast.LENGTH_SHORT).show();
         }
         else {
+
             mediaPlayer.start();
             t.setText("PLAY");
         }
@@ -154,7 +145,6 @@ public class MainActivity extends Activity {
     }
 
     private class AsyncVideo extends AsyncTask<String, Void, Void> {
-
         @Override
         protected Void doInBackground(String... params) {
             cargarVideo();
