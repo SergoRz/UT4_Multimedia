@@ -30,6 +30,7 @@ public class MainActivity extends Activity {
 
         videoView.setVideoURI(Uri.parse("http://desprogresiva.antena3.com/mp_seriesh4/2013/02/22/00029/001.mp4"));
 
+
         // Registramos el callback que será invocado cuando el vídeo esté cargado y
         // preparado para la reproducción
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
