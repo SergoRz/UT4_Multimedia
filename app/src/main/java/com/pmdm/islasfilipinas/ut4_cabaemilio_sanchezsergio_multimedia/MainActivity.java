@@ -33,7 +33,6 @@ public class MainActivity extends Activity {
         asynVideo.execute();
 
         cargarMusica();
-
     }
 
     // Programamos el método onTouchEvent(), para que se muestre el MediaControl
