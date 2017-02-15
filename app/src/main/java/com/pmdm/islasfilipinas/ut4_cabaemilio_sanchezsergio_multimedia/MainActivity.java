@@ -3,6 +3,7 @@ package com.pmdm.islasfilipinas.ut4_cabaemilio_sanchezsergio_multimedia;
 import android.app.Activity;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +19,7 @@ public class MainActivity extends Activity {
     private MediaController mediaController;
     private MediaPlayer mediaPlayer;
     private TextView t;
+    private AsyncVideo asynVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,19 +41,9 @@ public class MainActivity extends Activity {
         videoView.setMediaController(mediaController);
         // Cargamos el contenido multimedia (el vídeo) en el VideoView
 
-        //videoView.setVideoURI(Uri.parse("http://desprogresiva.antena3.com/mp_seriesh4/2013/02/22/00029/001.mp4"));
-        //videoView.setVideoURI(Uri.parse("http://www.ebookfrenzy.com/android_book/movie.mp4"));
-        videoView.setVideoURI(Uri.parse("https://www.w3schools.com/html/mov_bbb.mp4"));
+        asynVideo = new AsyncVideo();
+        asynVideo.execute();
 
-        // Registramos el callback que será invocado cuando el vídeo esté cargado y
-        // preparado para la reproducción
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                Toast.makeText(MainActivity.this, "El video ya se ha cargado", Toast.LENGTH_SHORT).show();
-                videoView.pause();
-            }
-        });
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -106,6 +98,31 @@ public class MainActivity extends Activity {
         else {
             Toast.makeText(MainActivity.this, "La musica ya esta en pausa, no se puede parar lo parado", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private class AsyncVideo extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            descargaVideo();
+            return null;
+        }
+    }
+
+    public void descargaVideo(){
+        //videoView.setVideoURI(Uri.parse("http://desprogresiva.antena3.com/mp_seriesh4/2013/02/22/00029/001.mp4"));
+        //videoView.setVideoURI(Uri.parse("http://www.ebookfrenzy.com/android_book/movie.mp4"));
+        videoView.setVideoURI(Uri.parse("https://www.w3schools.com/html/mov_bbb.mp4"));
+
+        // Registramos el callback que será invocado cuando el vídeo esté cargado y
+        // preparado para la reproducción
+        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                Toast.makeText(MainActivity.this, "El video ya se ha cargado", Toast.LENGTH_SHORT).show();
+                videoView.pause();
+            }
+        });
     }
 }
 
