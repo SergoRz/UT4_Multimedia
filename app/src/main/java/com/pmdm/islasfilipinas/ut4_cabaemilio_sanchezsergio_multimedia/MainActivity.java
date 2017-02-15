@@ -18,10 +18,15 @@ public class MainActivity extends Activity {
     private VideoView videoView;
     private MediaController mediaController;
     private MediaPlayer mediaPlayer;
+    TextView t;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        t = (TextView) findViewById(R.id.tvEstadoAudio);
 
         // Obtenemos la referencia al widget VideoView
         videoView = (VideoView) findViewById(R.id.videoView);
@@ -56,7 +61,6 @@ public class MainActivity extends Activity {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                TextView t = (TextView) findViewById(R.id.textView);
                 mediaPlayer.release();
                 t.setText("La reproducción ha terminado, acabo de hacer un release()");
             }
@@ -72,7 +76,6 @@ public class MainActivity extends Activity {
     }
 
     public void play(View view){
-        TextView t = (TextView) findViewById(R.id.textView);
         if (mediaPlayer.isPlaying()){
             t.setText("Ya estás escuchando música, ¿qué más quieres chaval?");
         }
@@ -83,7 +86,6 @@ public class MainActivity extends Activity {
     }
 
     public void stop(View view) throws IOException {
-        TextView t = (TextView) findViewById(R.id.textView);
         if (mediaPlayer!=null && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
 
@@ -102,7 +104,6 @@ public class MainActivity extends Activity {
     }
 
     public void pause(View view){
-        TextView t = (TextView) findViewById(R.id.textView);
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
             t.setText("Acabas de pausar tu MP");
