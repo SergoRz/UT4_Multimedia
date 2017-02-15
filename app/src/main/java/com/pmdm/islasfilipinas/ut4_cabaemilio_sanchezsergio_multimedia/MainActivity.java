@@ -36,31 +36,21 @@ public class MainActivity extends Activity {
 
         asynVideo = new AsyncVideo();
         asynVideo.execute();
-
         cargarMusica();
-        // Establecemos el ancho del MediaController
-        mediaController.setAnchorView(videoView);
-
-        mediaPlayer = MediaPlayer.create(this, R.raw.plata_o_plomo);
-
-        seekBar.setMax(mediaPlayer.getDuration());
-
-        // Al contenedor VideoView le añadimos los controles
-        videoView.setMediaController(mediaController);
-        // Cargamos el contenido multimedia (el vídeo) en el VideoView
-
-        videoView.setVideoURI(Uri.parse("https://www.w3schools.com/html/mov_bbb.mp4"));
 
         final Handler mHandler = new Handler();
         //Make sure you update Seekbar on UI thread
         MainActivity.this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if(mediaPlayer.isPlaying()){
-                    int mCurrentPosition = mediaPlayer.getCurrentPosition();
-                    seekBar.setProgress(mCurrentPosition);
+                try{
+                    if(mediaPlayer != null){
+                        int mCurrentPosition = mediaPlayer.getCurrentPosition();
+                        seekBar.setProgress(mCurrentPosition);
+                    }
+                    mHandler.postDelayed(this, 1000);
+                } catch(IllegalStateException e) {
                 }
-                mHandler.postDelayed(this, 1000);
             }
         });
 
@@ -94,7 +84,6 @@ public class MainActivity extends Activity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(mediaPlayer != null && fromUser){
                     mediaPlayer.seekTo(progress);
-                    mediaPlayer.start();
                 }
             }
         });
@@ -111,9 +100,11 @@ public class MainActivity extends Activity {
     private void cargarMusica(){
         mediaPlayer = MediaPlayer.create(this, R.raw.plata_o_plomo);
 
+        seekBar.setMax(mediaPlayer.getDuration());
+
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
-            public void onCompletion(MediaPlayer mp) {
+            public void onCompletion(MediaPlayer mp){
                 mediaPlayer.release();
                 t.setText("FINALIZADO");
             }
