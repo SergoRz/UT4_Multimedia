@@ -11,8 +11,8 @@ import android.widget.VideoView;
 
 public class MainActivity extends Activity {
 
-    VideoView videoView;
-    MediaController mediaController;
+    private VideoView videoView;
+    private MediaController mediaController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,8 @@ public class MainActivity extends Activity {
         // Al contenedor VideoView le añadimos los controles
         videoView.setMediaController(mediaController);
         // Cargamos el contenido multimedia (el vídeo) en el VideoView
-        videoView.setVideoURI(Uri.parse("http://www.ted.com/talks/download/video/8584/talk/761"));
+
+        videoView.setVideoURI(Uri.parse("http://desprogresiva.antena3.com/mp_seriesh4/2013/02/22/00029/001.mp4"));
 
         // Registramos el callback que será invocado cuando el vídeo esté cargado y
         // preparado para la reproducción
