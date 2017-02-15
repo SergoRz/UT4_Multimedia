@@ -36,7 +36,7 @@ public class MainActivity extends Activity {
 
         videoView.setVideoURI(Uri.parse("http://www.ebookfrenzy.com/android_book/movie.mp4"));
 
-
+        videoView.setVideoURI(Uri.parse("https://www.w3schools.com/html/mov_bbb.mp4"));
         // Registramos el callback que será invocado cuando el vídeo esté cargado y
         // preparado para la reproducción
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
