@@ -33,7 +33,7 @@
                 android:textAlignment="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView"
+                android:id="@+id/tvAudio"
                 android:layout_weight="1" />
         </LinearLayout>
 
@@ -47,21 +47,21 @@
                 android:text="PLAY"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/button3"
+                android:id="@+id/btnPlay"
                 android:layout_weight="1" />
 
             <Button
                 android:text="STOP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/button2"
+                android:id="@+id/btnStop"
                 android:layout_weight="1" />
 
             <Button
                 android:text="PAUSE"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/button"
+                android:id="@+id/btnPause"
                 android:layout_weight="1" />
         </LinearLayout>
 
@@ -70,7 +70,7 @@
             android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2" />
+            android:id="@+id/tvEstadoAudio" />
 
     </LinearLayout>
 
