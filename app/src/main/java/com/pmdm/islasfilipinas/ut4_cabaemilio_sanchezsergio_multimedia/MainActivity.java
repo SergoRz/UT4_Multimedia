@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.MediaController;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
+
 import java.io.IOException;
 
 public class MainActivity extends Activity {
@@ -18,7 +21,7 @@ public class MainActivity extends Activity {
     private MediaController mediaController;
     private MediaPlayer mediaPlayer;
     private TextView t;
-
+    private SeekBar seekBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +29,7 @@ public class MainActivity extends Activity {
         t = (TextView) findViewById(R.id.tvEstadoAudio);
         // Obtenemos la referencia al widget VideoView
         videoView = (VideoView) findViewById(R.id.videoView);
+        seekBar = (SeekBar) findViewById(R.id.seekBar);
 
         // Creamos el objeto MediaController
         mediaController = new MediaController(this);
@@ -35,13 +39,26 @@ public class MainActivity extends Activity {
 
         mediaPlayer = MediaPlayer.create(this, R.raw.plata_o_plomo);
 
+        seekBar.setMax(mediaPlayer.getDuration());
+
         // Al contenedor VideoView le añadimos los controles
         videoView.setMediaController(mediaController);
         // Cargamos el contenido multimedia (el vídeo) en el VideoView
 
-        //videoView.setVideoURI(Uri.parse("http://desprogresiva.antena3.com/mp_seriesh4/2013/02/22/00029/001.mp4"));
-        //videoView.setVideoURI(Uri.parse("http://www.ebookfrenzy.com/android_book/movie.mp4"));
         videoView.setVideoURI(Uri.parse("https://www.w3schools.com/html/mov_bbb.mp4"));
+
+        final Handler mHandler = new Handler();
+        //Make sure you update Seekbar on UI thread
+        MainActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(mediaPlayer.isPlaying()){
+                    int mCurrentPosition = mediaPlayer.getCurrentPosition();
+                    seekBar.setProgress(mCurrentPosition);
+                }
+                mHandler.postDelayed(this, 1000);
+            }
+        });
 
         // Registramos el callback que será invocado cuando el vídeo esté cargado y
         // preparado para la reproducción
@@ -58,6 +75,23 @@ public class MainActivity extends Activity {
             public void onCompletion(MediaPlayer mp) {
                 mediaPlayer.release();
                 t.setText("FINALIZADO");
+            }
+        });
+
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(mediaPlayer != null && fromUser){
+                    mediaPlayer.seekTo(progress);
+                    mediaPlayer.start();
+                }
             }
         });
     }
@@ -85,8 +119,8 @@ public class MainActivity extends Activity {
             mediaPlayer.stop();
             try {
                 mediaPlayer.prepare();
-                mediaPlayer.seekTo(0);
                 t.setText("STOP");
+                seekBar.setProgress(0);
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (IllegalStateException e) {
@@ -95,6 +129,9 @@ public class MainActivity extends Activity {
         }
         else {
             Toast.makeText(MainActivity.this, "La música no suena, ¿por qué quieres pararla?", Toast.LENGTH_SHORT).show();
+            t.setText("STOP");
+            mediaPlayer.seekTo(0);
+            seekBar.setProgress(0);
         }
     }
 
