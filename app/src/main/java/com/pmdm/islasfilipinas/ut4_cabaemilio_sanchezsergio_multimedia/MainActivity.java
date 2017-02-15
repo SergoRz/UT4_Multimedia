@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.io.IOException;
@@ -18,11 +19,13 @@ public class MainActivity extends Activity {
     private VideoView videoView;
     private MediaController mediaController;
     private MediaPlayer mediaPlayer;
+    private TextView t;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        t = (TextView) findViewById(R.id.tvEstadoAudio);
         // Obtenemos la referencia al widget VideoView
         videoView = (VideoView) findViewById(R.id.videoView);
 
@@ -47,18 +50,17 @@ public class MainActivity extends Activity {
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                videoView.start();
+                Toast.makeText(MainActivity.this, "El video ya se ha cargado", Toast.LENGTH_SHORT).show();
+                videoView.pause();
             }
         });
-
-
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 TextView t = (TextView) findViewById(R.id.textView);
                 mediaPlayer.release();
-                t.setText("La reproducción ha terminado, acabo de hacer un release()");
+                t.setText("FINALIZADO");
             }
         });
     }
@@ -72,24 +74,21 @@ public class MainActivity extends Activity {
     }
 
     public void play(View view){
-        TextView t = (TextView) findViewById(R.id.textView);
         if (mediaPlayer.isPlaying()){
-            t.setText("Ya estás escuchando música, ¿qué más quieres chaval?");
+            Toast.makeText(MainActivity.this, "Ya estás escuchando música, ¿qué más quieres chaval?", Toast.LENGTH_SHORT).show();
         }
         else {
             mediaPlayer.start();
-            t.setText("Tu MP está parado, tranqui que le hago un start()");
+            t.setText("PLAY");
         }
     }
 
     public void stop(View view) throws IOException {
-        TextView t = (TextView) findViewById(R.id.textView);
         if (mediaPlayer!=null && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
-
             try {
                 mediaPlayer.prepare();
-                t.setText("La música estaba sonando pero acabas de hacer un stop() y un prepare() a tu MP");
+                t.setText("STOP");
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (IllegalStateException e) {
@@ -97,18 +96,17 @@ public class MainActivity extends Activity {
             }
         }
         else {
-            t.setText("La música no suena, el MP está parado, ¿por qué haces un stop()?");
+            Toast.makeText(MainActivity.this, "La música no suena, ¿por qué quieres pararla?", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void pause(View view){
-        TextView t = (TextView) findViewById(R.id.textView);
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
-            t.setText("Acabas de pausar tu MP");
+            t.setText("PAUSA");
         }
         else {
-            t.setText("Tu MP no está en ejecución, luego no lo puedes pausar");
+            Toast.makeText(MainActivity.this, "La musica ya esta en pausa, no se puede parar lo parado", Toast.LENGTH_SHORT).show();
         }
     }
 }
