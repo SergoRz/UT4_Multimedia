@@ -29,29 +29,11 @@ public class MainActivity extends Activity {
         // Obtenemos la referencia al widget VideoView
         videoView = (VideoView) findViewById(R.id.videoView);
 
-        // Creamos el objeto MediaController
-        mediaController = new MediaController(this);
-
-        // Establecemos el ancho del MediaController
-        mediaController.setAnchorView(videoView);
-
-        mediaPlayer = MediaPlayer.create(this, R.raw.plata_o_plomo);
-
-        // Al contenedor VideoView le añadimos los controles
-        videoView.setMediaController(mediaController);
-        // Cargamos el contenido multimedia (el vídeo) en el VideoView
-
         asynVideo = new AsyncVideo();
         asynVideo.execute();
 
+        cargarMusica();
 
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mediaPlayer.release();
-                t.setText("FINALIZADO");
-            }
-        });
     }
 
     // Programamos el método onTouchEvent(), para que se muestre el MediaControl
@@ -60,6 +42,18 @@ public class MainActivity extends Activity {
     public boolean onTouchEvent(MotionEvent event) {
         mediaController.show();
         return false;
+    }
+
+    private void cargarMusica(){
+        mediaPlayer = MediaPlayer.create(this, R.raw.plata_o_plomo);
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mediaPlayer.release();
+                t.setText("FINALIZADO");
+            }
+        });
     }
 
     public void play(View view){
@@ -104,25 +98,37 @@ public class MainActivity extends Activity {
 
         @Override
         protected Void doInBackground(String... params) {
-            descargaVideo();
+            cargarVideo();
             return null;
+        }
+
+        public void cargarVideo(){
+            // Creamos el objeto MediaController
+            mediaController = new MediaController(MainActivity.this);
+
+            // Establecemos el ancho del MediaController
+            mediaController.setAnchorView(videoView);
+
+            // Al contenedor VideoView le añadimos los controles
+            videoView.setMediaController(mediaController);
+            // Cargamos el contenido multimedia (el vídeo) en el VideoView
+
+            //videoView.setVideoURI(Uri.parse("http://desprogresiva.antena3.com/mp_seriesh4/2013/02/22/00029/001.mp4"));
+            //videoView.setVideoURI(Uri.parse("http://www.ebookfrenzy.com/android_book/movie.mp4"));
+            videoView.setVideoURI(Uri.parse("https://www.w3schools.com/html/mov_bbb.mp4"));
+
+            // Registramos el callback que será invocado cuando el vídeo esté cargado y
+            // preparado para la reproducción
+            videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    Toast.makeText(MainActivity.this, "El video ya se ha cargado", Toast.LENGTH_SHORT).show();
+                    videoView.pause();
+                }
+            });
         }
     }
 
-    public void descargaVideo(){
-        //videoView.setVideoURI(Uri.parse("http://desprogresiva.antena3.com/mp_seriesh4/2013/02/22/00029/001.mp4"));
-        //videoView.setVideoURI(Uri.parse("http://www.ebookfrenzy.com/android_book/movie.mp4"));
-        videoView.setVideoURI(Uri.parse("https://www.w3schools.com/html/mov_bbb.mp4"));
 
-        // Registramos el callback que será invocado cuando el vídeo esté cargado y
-        // preparado para la reproducción
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                Toast.makeText(MainActivity.this, "El video ya se ha cargado", Toast.LENGTH_SHORT).show();
-                videoView.pause();
-            }
-        });
-    }
 }
 
