@@ -11,13 +11,21 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="215dp">
+            android:layout_height="240dp">
+
+            <TextView
+                android:text="REPRODUCCION DE VIDEO"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvVideo" />
 
             <VideoView
+                android:layout_marginTop="30dp"
                 android:layout_width="match_parent"
-                android:layout_height="215dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/videoView" />
 
         </LinearLayout>
