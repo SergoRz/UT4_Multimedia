@@ -56,7 +56,6 @@ public class MainActivity extends Activity {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                TextView t = (TextView) findViewById(R.id.textView);
                 mediaPlayer.release();
                 t.setText("FINALIZADO");
             }
