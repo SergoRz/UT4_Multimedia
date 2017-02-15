@@ -107,66 +107,111 @@ public class PantallaPrincipal extends Activity {
         return false;
     }
 
-
+    /**
+     * Método que se encarga de cargar el reproductor de música y de establecer el maximo
+     * al SeekBar con la duracion de la cancion que esta cargada actualmente. Dentro de este método
+     * tambien se ha cargado el listener que se ejecutara cuando la cancion finalice.
+     */
     private void cargarMusica(){
+        //Se crea el controlador del audio
         mediaPlayer = MediaPlayer.create(this, R.raw.plata_o_plomo);
-
+        //Se establece el valor maximo del SeekBar
         seekBar.setMax(mediaPlayer.getDuration());
 
+        //Se crea el listener que se ejecutara cuando la cancion finalice
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp){
                 try {
+                    //Se pasa a estado stop
                     mediaPlayer.stop();
+                    //Se pasa a estado preparado
                     mediaPlayer.prepare();
+                    //Se posiciona en el milisegundo 0
                     mediaPlayer.seekTo(0);
+                    //Se actualiza el TextBox del estado de la reproducion
                     tvEstadoAudio.setText("FINALIZADO");
+                    //Se reinicia el SeekBar
                     seekBar.setProgress(0);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Toast.makeText(PantallaPrincipal.this, "Error de reproduccion", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
+    /**
+     * Metodo que se ejecutara cuando se le de al boton PLAY, en el caso de que no este este
+     * reproduciendose la musica se reproducira, en el caso de que ya este reproduciendose la
+     * musica se informara al usuario de que ya esta reproduciendo la musica.
+     * @param view Boton que al ser pulsado lanza este metodo
+     */
     public void play(View view){
+        //Si la musica esta reproduciendose
         if (mediaPlayer.isPlaying()){
-            Toast.makeText(PantallaPrincipal.this, "Ya estás escuchando música, ¿qué más quieres chaval?", Toast.LENGTH_SHORT).show();
-        }
+            //Se informa al usuario
+            Toast.makeText(PantallaPrincipal.this, "Ya estás escuchando música?", Toast.LENGTH_SHORT).show();
+        }//Si la musica no esta reproduciendose
         else {
+            //Se inicia la reproduccion
             mediaPlayer.start();
+            //Se actualiza el TextBox de estado de la reproduccion
             tvEstadoAudio.setText("PLAY");
         }
     }
 
-    public void stop(View view) throws IOException {
-        if (mediaPlayer!=null && mediaPlayer.isPlaying()) {
+    /**
+     * Metodo que se ejecutara cuando se le de al boton STOP, en el caso de que ya este
+     * parada la musica se informara al usuario de que ya esta parada la musica,
+     * en el caso de que este reproduciendose se parara, y se reiniciara el MediaPlayer y
+     * la barra de reproduccion.
+     * @param view Boton que al ser pulsado lanza este metodo
+     */
+    public void stop(View view) {
+        //Si el MediaPlayer esta reproduciendose
+        if (mediaPlayer !=null && mediaPlayer.isPlaying()) {
+            //Se para la reproduccion
             mediaPlayer.stop();
             try {
+                //Se reinicia la reproduccion
                 mediaPlayer.prepare();
                 mediaPlayer.seekTo(0);
+                //Se actualiza el TextBox de estado de la reproduccion
                 tvEstadoAudio.setText("STOP");
+                //Se restablece la barra de reproduccion
                 seekBar.setProgress(0);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
+            } catch (IOException | IllegalStateException e) {
+                Toast.makeText(PantallaPrincipal.this, "Error de reproduccion", Toast.LENGTH_SHORT).show();
             }
         }
-        else {
+        else { //Si ya esta en parada o en pausa
+            //Se informa al usuario
             Toast.makeText(PantallaPrincipal.this, "La música no suena, ¿por qué quieres pararla?", Toast.LENGTH_SHORT).show();
+            //Se actualiza el TextBox de estado de la reproduccion
             tvEstadoAudio.setText("STOP");
+            //Se reinicia la reproduccion
             mediaPlayer.seekTo(0);
+            //Se restablece la barra de reproduccion
             seekBar.setProgress(0);
         }
     }
 
+    /**
+     * Metodo que se ejecutara cuando se le de al boton PAUSE, en el caso de que ya este
+     * pausada la musica se informara al usuario de que ya esta pausada,
+     * en el caso de que este reproduciendose se pausara.
+     * @param view Boton que al ser pulsado lanza este metodo
+     */
     public void pause(View view){
+        //Si  la musica esta ejecutandose
         if (mediaPlayer.isPlaying()) {
+            //Se para la musica
             mediaPlayer.pause();
+            //Se actualiza el TextBox de estado de la reproduccion
             tvEstadoAudio.setText("PAUSA");
         }
-        else {
+        else {//Si ya esta en pausa
+            //Se informa al usuario
             Toast.makeText(PantallaPrincipal.this, "La musica ya esta en pausa, no se puede parar lo parado", Toast.LENGTH_SHORT).show();
         }
     }
@@ -189,8 +234,8 @@ public class PantallaPrincipal extends Activity {
         }
 
         /**
-         * Metodo que se encarga de crear el objeto MediaPlayer para la reproduccion del video,
-         * tambien se configura el ancho del MediaPlayer, se aplica el controlador al MediaPlayer
+         * Metodo que se encarga de crear el objeto MediaController para la reproduccion del video,
+         * tambien se configura el ancho del MediaPlayer, se aplica el controlador al VideoView
          * y se establece la direccion del video.
          * Ademas hay un listener que se ejecuta cuando el video esta preparado para reproducirse.
          */
